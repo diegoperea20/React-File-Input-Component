@@ -1,95 +1,61 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+import { useRef, useState } from 'react';
+import InputFile from '@/components/InputFile';
+import Link from 'next/link';
 
-export default function Home() {
+function Page() {
+  const codeRef = useRef(null);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(codeRef.current.innerText).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // Cambia de nuevo a 'Copiar' después de 2 segundos
+    }, (err) => {
+      console.error('Error al copiar el código: ', err);
+    });
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div>
+      <h2 style={{ textAlign: 'center' }}>React File Input Component</h2>
+      <h4>Dark Mode Default</h4>
+      <InputFile /> {/* theme dark for default */}
+      <h4>Clear Mode</h4>
+      <div style={{ position: 'relative', display: 'inline-block' }}>
+        <button
+          onClick={handleCopy}
+          style={{
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            padding: '4px 8px',
+            fontSize: '12px',
+            cursor: 'pointer',
+            backgroundColor: copied ? '#4caf50' : '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '3px'
+          }}
+        >
+          {copied ? '✔' : 'Copy'}
+        </button>
+        <pre>
+          <code ref={codeRef}>
+            {`<InputFile theme="clear" />`}
+          </code>
+        </pre>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <InputFile theme="clear" /> {/* theme clear */}
+      <div className="project-github">
+        <p>This project is in </p>
+        <Link href="https://github.com/diegoperea20">
+          <img width="96" height="96" src="https://img.icons8.com/fluency/96/github.png" alt="github"/>
+        </Link>
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+     
+    </div>
   );
 }
+
+export default Page;
